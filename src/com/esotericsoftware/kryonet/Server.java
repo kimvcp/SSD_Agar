@@ -86,7 +86,7 @@ public class Server implements EndPoint {
 		}
 	};
 
-	/** Creates a Server with a write buffer size of 16384 and an object buffer size of 2048. */
+	/** Creates a GameServer with a write buffer size of 16384 and an object buffer size of 2048. */
 	public Server () {
 		this(16384, 2048);
 	}
@@ -170,7 +170,7 @@ public class Server implements EndPoint {
 				throw ex;
 			}
 		}
-		if (INFO) info("kryonet", "Server opened.");
+		if (INFO) info("kryonet", "GameServer opened.");
 	}
 
 	/** Accepts any new connections and reads or writes any pending data for the current connections.
@@ -383,7 +383,7 @@ public class Server implements EndPoint {
 	}
 
 	public void run () {
-		if (TRACE) trace("kryonet", "Server thread started.");
+		if (TRACE) trace("kryonet", "GameServer thread started.");
 		shutdown = false;
 		while (!shutdown) {
 			try {
@@ -393,17 +393,17 @@ public class Server implements EndPoint {
 				close();
 			}
 		}
-		if (TRACE) trace("kryonet", "Server thread stopped.");
+		if (TRACE) trace("kryonet", "GameServer thread stopped.");
 	}
 
 	public void start () {
-		new Thread(this, "Server").start();
+		new Thread(this, "GameServer").start();
 	}
 
 	public void stop () {
 		if (shutdown) return;
 		close();
-		if (TRACE) trace("kryonet", "Server thread stopping.");
+		if (TRACE) trace("kryonet", "GameServer thread stopping.");
 		shutdown = true;
 	}
 
@@ -528,7 +528,7 @@ public class Server implements EndPoint {
 			System.arraycopy(listeners, 0, newListeners, 1, n);
 			this.listeners = newListeners;
 		}
-		if (TRACE) trace("kryonet", "Server listener added: " + listener.getClass().getName());
+		if (TRACE) trace("kryonet", "GameServer listener added: " + listener.getClass().getName());
 	}
 
 	public void removeListener (Listener listener) {
@@ -545,7 +545,7 @@ public class Server implements EndPoint {
 			}
 			this.listeners = newListeners;
 		}
-		if (TRACE) trace("kryonet", "Server listener removed: " + listener.getClass().getName());
+		if (TRACE) trace("kryonet", "GameServer listener removed: " + listener.getClass().getName());
 	}
 
 	/** Closes all open connections and the server port(s). */
@@ -560,7 +560,7 @@ public class Server implements EndPoint {
 		if (serverChannel != null) {
 			try {
 				serverChannel.close();
-				if (INFO) info("kryonet", "Server closed.");
+				if (INFO) info("kryonet", "GameServer closed.");
 			} catch (IOException ex) {
 				if (DEBUG) debug("kryonet", "Unable to close server.", ex);
 			}

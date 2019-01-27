@@ -2,6 +2,7 @@ package agarssd.model;
 
 import java.util.Random;
 
+//NOTE: Don't touch this class
 public abstract class WorldObject {
 
     // Properties need to be public for Kryo serialization
@@ -14,8 +15,12 @@ public abstract class WorldObject {
     }
 
     public float distance(WorldObject another) {
-        float diffX = positionX - another.positionX;
-        float diffY = positionY - another.positionY;
+        return distance(another.positionX, another.positionY);
+    }
+
+    public float distance(float x, float y) {
+        float diffX = positionX - x;
+        float diffY = positionY - y;
         return (float) Math.sqrt(diffX * diffX + diffY * diffY);
     }
 

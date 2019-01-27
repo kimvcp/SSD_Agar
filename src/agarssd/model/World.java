@@ -3,18 +3,13 @@ package agarssd.model;
 import java.util.ArrayList;
 import java.util.List;
 
+//NOTE: Don't touch this class
 public class World {
 
     // Properties need to be public for Kryo serialization
-    public List<Player> players;
-    public List<Item> items;
-    public int size;
-
-    public World(int size) {
-        this.size = size;
-        this.players = new ArrayList<Player>();
-        this.items = new ArrayList<Item>();
-    }
+    public List<Player> players = new ArrayList<Player>();
+    public List<Item> items = new ArrayList<Item>();
+    public int size = 500;
 
     public boolean addPlayer(Player p) {
         return players.add(p);

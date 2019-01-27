@@ -1,9 +1,6 @@
 package agarssd.model;
 
+//NOTE: Don't touch this class
 public class Item extends WorldObject {
 
-    public Item(float x, float y) {
-        this.positionX = x;
-        this.positionY = y;
-    }
 }
