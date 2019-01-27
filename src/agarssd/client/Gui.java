@@ -1,5 +1,6 @@
 package agarssd.client;
 
+import agarssd.model.Item;
 import agarssd.model.Player;
 import agarssd.model.World;
 
@@ -9,6 +10,7 @@ import java.awt.*;
 public class Gui extends JFrame {
 
     private World world;
+    private Player myPlayer;
     private JPanel panel;
 
     public Gui() {
@@ -21,20 +23,20 @@ public class Gui extends JFrame {
                 }
                 paintBackground(g);
                 paintGrid(g);
-                paintPlayers(g);
                 paintItems(g);
+                paintPlayers(g);
             }
         };
         panel.setDoubleBuffered(true);
         add(panel);
         setSize(500, 500);
-        setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    public void repaintWorld(World world) {
+    public void update(World world, Player myPlayer) {
         this.world = world;
+        this.myPlayer = myPlayer;
         panel.repaint();
     }
 
@@ -52,15 +54,31 @@ public class Gui extends JFrame {
             return;
         }
         for(Player p : world.players) {
-            g.setColor(Color.red);
-            g.fillOval((int) (p.positionX - p.size/2),
-                    (int) (p.positionY - p.size/2),
-                    (int) p.size,
-                    (int) p.size);
+            if(!p.alive) {
+                continue;
+            }
+            if(p.id == myPlayer.id) {
+                g.setColor(Color.green);
+            } else {
+                g.setColor(Color.red);
+            }
+            g.fillOval((int) (p.positionX - p.size),
+                    (int) (p.positionY - p.size),
+                    (int) p.size * 2,
+                    (int) p.size * 2);
         }
     }
 
     private void paintItems(Graphics g) {
-
+        if(world == null) {
+            return;
+        }
+        for(Item i : world.items) {
+            g.setColor(Color.blue);
+            g.fillOval((int) (i.positionX - i.size),
+                    (int) (i.positionY - i.size),
+                    (int) i.size * 2,
+                    (int) i.size * 2);
+        }
     }
 }

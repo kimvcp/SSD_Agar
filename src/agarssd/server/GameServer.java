@@ -22,6 +22,7 @@ public class GameServer {
     private Map<Connection, Player> connectedPlayers =
             new HashMap<Connection, Player>();
     private boolean running;
+    private int lastId = 0;
 
     public void start() {
         startServer();
@@ -63,10 +64,11 @@ public class GameServer {
 
             public void connected(Connection connection) {
                 Player p = new Player();
+                p.id = ++lastId;
                 p.randomPosition(0, 0, world.size, world.size);
                 connectedPlayers.put(connection, p);
                 world.addPlayer(p);
-                kryoServer.sendToAllTCP(world);
+                connection.sendTCP(p);
             }
 
             public void disconnected(Connection connection) {
@@ -74,7 +76,6 @@ public class GameServer {
                 if(p != null) {
                     world.removePlayer(p);
                 }
-                kryoServer.sendToAllTCP(world);
             }
         });
         kryoServer.start();
@@ -83,10 +84,5 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        GameServer gameServer = new GameServer();
-        gameServer.start();
     }
 }

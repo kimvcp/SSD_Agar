@@ -9,18 +9,61 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class GameClient {
 
-    public static final String ADDRESS = "127.0.0.1";
+    public static final String ADDRESS = "127.0.0.1"; // For testing locally
+    // public static final String ADDRESS = "127.0.0.1"; // For testing on online server
+    // public static final String ADDRESS = "192.168.xxx.xxx"; // For testing on lan network
+
+    // Please do not modify these variables.
     public static final int PORT = 54555;
     public static final int TIMEOUT = 5000;
+    public static final int LOGIC_DELAY = 1000;
 
     private Client kryoClient;
-    private Gui gui;
+    private Gui gui = new Gui();
+    private World world;
+    private Player myPlayer;
+    private GameLogic logic;
+    private boolean running;
 
     public void start() {
+        initNetwork();
+        initLogic();
+        gui.setVisible(true);
+    }
+
+    private void initLogic() {
+        logic = new GameLogic();
+        running = true;
+        Thread logicThread = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                while(running) {
+                    MoveCommand command = logic.getNextMoveCommand(world);
+                    if (command != null) {
+                        kryoClient.sendTCP(command);
+                    }
+                    try {
+                        Thread.sleep(LOGIC_DELAY);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        logicThread.start();
+    }
+
+    private void updateGui() {
+        if(gui != null) {
+            gui.update(world, myPlayer);
+        }
+    }
+
+    private void initNetwork() {
         kryoClient = new Client();
         kryoClient.getKryo().register(World.class);
         kryoClient.getKryo().register(Player.class);
@@ -31,11 +74,11 @@ public class GameClient {
         kryoClient.start();
         kryoClient.addListener(new Listener() {
             public void received (Connection connection, Object object) {
-                if (object instanceof World) {
-                    World world = (World) object;
-                    if(gui != null) {
-                        gui.repaintWorld(world);
-                    }
+                if (object instanceof Player) {
+                    myPlayer = (Player) object;
+                } else if (object instanceof World) {
+                    world = (World) object;
+                    updateGui();
                 }
             }
         });
@@ -44,15 +87,5 @@ public class GameClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        gui = new Gui();
     }
-
-    public static void main(String[] args) {
-        GameClient gameClient = new GameClient();
-        gameClient.start();
-
-        new Scanner(System.in).nextLine();
-    }
-
 }

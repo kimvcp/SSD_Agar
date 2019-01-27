@@ -3,17 +3,19 @@ package agarssd.model;
 //NOTE: Don't touch this class
 public class Player extends WorldObject{
 
-    public static final int DEFAULT_SIZE = 10;
-    public static final float SPEED = 2;
+    public static final int SIZE = 10;
 
     // Properties need to be public for Kryo serialization
+    public int id;
     public String name;
     public float destinationX;
     public float destinationY;
     public boolean moving;
+    public boolean alive;
 
     public Player() {
-        size = DEFAULT_SIZE;
+        alive = true;
+        size = SIZE;
     }
 
     public void move() {
@@ -23,5 +25,9 @@ public class Player extends WorldObject{
         float distance = distance(destinationX, destinationY);
         positionX += (destinationX - positionX) / distance;
         positionY += (destinationY - positionY) / distance;
+    }
+
+    public void die(){
+        alive = false;
     }
 }

@@ -6,10 +6,17 @@ import java.util.List;
 //NOTE: Don't touch this class
 public class World {
 
+    public static final int SIZE = 500;
+    public static final int ITEM_COUNT = 30;
+
     // Properties need to be public for Kryo serialization
     public List<Player> players = new ArrayList<Player>();
     public List<Item> items = new ArrayList<Item>();
-    public int size = 500;
+    public int size = SIZE;
+
+    public World() {
+        initItems();
+    }
 
     public boolean addPlayer(Player p) {
         return players.add(p);
@@ -20,18 +27,61 @@ public class World {
     }
 
     public void tick() {
-        // Move Players
+        movePlayers();
+        checkPlayersItemsCollisions();
+        checkPlayersPlayersCollisions();
+    }
+
+    private void initItems() {
+        for(int i = 0; i < ITEM_COUNT; i++) {
+            Item item = new Item();
+            item.randomPosition(0, 0, size, size);
+            items.add(item);
+        }
+    }
+
+    private void movePlayers() {
         for(Player p : players) {
             p.move();
         }
-        // Detect Players X Items
+    }
+
+    private void checkPlayersItemsCollisions() {
         for(Player p : players) {
             for(Item i : items) {
                 if(p.intersect(i)) {
                     i.randomPosition(0,0, size, size);
+                    p.size += 1;
                 }
             }
         }
-        // TODO: Detect Players X Players
+    }
+
+    private void checkPlayersPlayersCollisions() {
+        for(Player p1 : players) {
+            if(!p1.alive) {
+                continue;
+            }
+            for(Player p2 : players) {
+                if(p1 == p2) {
+                    continue;
+                }
+                if(!p2.alive) {
+                    continue;
+                }
+                if(!p1.intersect(p2)) {
+                    continue;
+                }
+                // Hit
+                if(p1.largerThan(p2)) {
+                    p2.die();
+                } else if(p2.largerThan(p1)) {
+                    p1.die();
+                } else {
+                    p1.die();
+                    p2.die();
+                }
+            }
+        }
     }
 }
