@@ -1,6 +1,8 @@
 package agarssd.model;
 
-//NOTE: Don't touch this class
+/**
+ * An item for a player to pick up.
+ */
 public class Item extends WorldObject {
 
     public static final int SIZE = 5;
@@ -8,5 +10,4 @@ public class Item extends WorldObject {
     public Item() {
         size = SIZE;
     }
-
 }

@@ -55,9 +55,10 @@ public class GameServer {
                     MoveCommand move = (MoveCommand) object;
                     Player p = connectedPlayers.get(connection);
                     if(p != null) {
+                        int border = 2;
                         p.moving = true;
-                        p.destinationX = move.toX;
-                        p.destinationY = move.toY;
+                        p.destinationX = Math.min(Math.max(border, move.toX), world.size - border);
+                        p.destinationY = Math.min(Math.max(border, move.toY), world.size - border);
                     }
                 }
             }

@@ -3,7 +3,6 @@ package agarssd.model;
 import java.util.ArrayList;
 import java.util.List;
 
-//NOTE: Don't touch this class
 public class World {
 
     public static final int SIZE = 500;
@@ -51,7 +50,7 @@ public class World {
             for(Item i : items) {
                 if(p.intersect(i)) {
                     i.randomPosition(0,0, size, size);
-                    p.size += 1;
+                    p.size = Math.min(size/2, p.size + 1);
                 }
             }
         }
@@ -74,8 +73,10 @@ public class World {
                 }
                 // Hit
                 if(p1.largerThan(p2)) {
+                    p1.size = Math.min(size/2, p1.size + (int)Math.sqrt(p2.size));
                     p2.die();
                 } else if(p2.largerThan(p1)) {
+                    p2.size = Math.min(size/2, p2.size + (int)Math.sqrt(p1.size));
                     p1.die();
                 } else {
                     p1.die();

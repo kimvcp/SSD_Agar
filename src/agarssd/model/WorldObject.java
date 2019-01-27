@@ -2,7 +2,10 @@ package agarssd.model;
 
 import java.util.Random;
 
-//NOTE: Don't touch this class
+/**
+ * This class represents a world object.
+ * Each object in out world must be positioned in on x,y and must have a size.
+ */
 public abstract class WorldObject {
 
     // Properties need to be public for Kryo serialization

@@ -59,7 +59,7 @@ public class GameClient {
 
     private void updateGui() {
         if(gui != null) {
-            gui.update(world, myPlayer);
+            gui.update(world);
         }
     }
 
@@ -76,6 +76,7 @@ public class GameClient {
             public void received (Connection connection, Object object) {
                 if (object instanceof Player) {
                     myPlayer = (Player) object;
+                    gui.registerMyPlayer(myPlayer);
                 } else if (object instanceof World) {
                     world = (World) object;
                     updateGui();

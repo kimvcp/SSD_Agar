@@ -12,6 +12,8 @@ public class Gui extends JFrame {
     private World world;
     private Player myPlayer;
     private JPanel panel;
+    private int size = 500;
+    private boolean gameOver = false;
 
     public Gui() {
         panel = new JPanel() {
@@ -29,24 +31,53 @@ public class Gui extends JFrame {
         };
         panel.setDoubleBuffered(true);
         add(panel);
-        setSize(500, 500);
+        setSize(size, size);
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
-    public void update(World world, Player myPlayer) {
-        this.world = world;
+    public void registerMyPlayer(Player myPlayer) {
         this.myPlayer = myPlayer;
+    }
+
+    public void update(World world) {
+        this.world = world;
+        checkMyPlayerAlive();
         panel.repaint();
     }
 
+    private void checkMyPlayerAlive() {
+        if(gameOver) {
+            return;
+        }
+        for(Player p: world.players) {
+            if(p.id != myPlayer.id) {
+                continue;
+            }
+            if(!p.alive && !gameOver) {
+                gameOver = true;
+                JOptionPane.showMessageDialog(
+                        null,
+                        "You Lose",
+                        "Try Again :)",
+                        0);
+            }
+        }
+    }
+
     private void paintBackground(Graphics g) {
-        g.setColor(Color.gray);
+        g.setColor(Color.white);
         g.fillRect(0, 0, getWidth(), getHeight());
     }
 
     private void paintGrid(Graphics g) {
-
+        int cellWidth = 20;
+        int cellCount = size/cellWidth;
+        g.setColor(Color.lightGray);
+        for(int i = 0; i < cellCount; i++) {
+            g.drawLine(0, cellWidth * i, size, cellWidth * i);
+            g.drawLine(i * cellCount, 0,  i * cellCount, size);
+        }
     }
 
     private void paintPlayers(Graphics g) {
@@ -57,6 +88,15 @@ public class Gui extends JFrame {
             if(!p.alive) {
                 continue;
             }
+            // Border
+            int border = 1;
+            g.setColor(Color.black);
+            g.fillOval((int) (p.positionX - p.size - border ),
+                    (int) (p.positionY - p.size - border),
+                    (int) p.size * 2 + border * 2,
+                    (int) p.size * 2 + border * 2);
+
+            // Inner
             if(p.id == myPlayer.id) {
                 g.setColor(Color.green);
             } else {
@@ -66,6 +106,9 @@ public class Gui extends JFrame {
                     (int) (p.positionY - p.size),
                     (int) p.size * 2,
                     (int) p.size * 2);
+            if(p.id == myPlayer.id) {
+                g.drawString("You", (int)(p.positionX + p.size), (int)(p.positionY + p.size));
+            }
         }
     }
 

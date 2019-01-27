@@ -1,13 +1,14 @@
 package agarssd.model;
 
-//NOTE: Don't touch this class
+/**
+ * A player who plays the game.
+ */
 public class Player extends WorldObject{
 
     public static final int SIZE = 10;
 
     // Properties need to be public for Kryo serialization
     public int id;
-    public String name;
     public float destinationX;
     public float destinationY;
     public boolean moving;
@@ -23,6 +24,12 @@ public class Player extends WorldObject{
             return;
         }
         float distance = distance(destinationX, destinationY);
+
+        // Prevent bouncing
+        if(distance < 1) {
+            return;
+        }
+
         positionX += (destinationX - positionX) / distance;
         positionY += (destinationY - positionY) / distance;
     }
