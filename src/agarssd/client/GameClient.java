@@ -12,8 +12,8 @@ import java.io.IOException;
 
 public class GameClient {
 
-    public static final String ADDRESS = "127.0.0.1"; // For testing locally
-    // public static final String ADDRESS = "127.0.0.1"; // For testing on online server
+    // public static final String ADDRESS = "127.0.0.1"; // For testing locally
+    public static final String ADDRESS = "206.189.34.126"; // For testing on online server
     // public static final String ADDRESS = "192.168.xxx.xxx"; // For testing on lan network
 
     // Please do not modify these variables.
