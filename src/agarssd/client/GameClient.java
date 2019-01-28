@@ -19,7 +19,7 @@ public class GameClient {
     // Please do not modify these variables.
     public static final int PORT = 54555;
     public static final int TIMEOUT = 5000;
-    public static final int LOGIC_DELAY = 1000;
+    public static final int LOGIC_DELAY = 500;
 
     private Client kryoClient;
     private Gui gui = new Gui();
