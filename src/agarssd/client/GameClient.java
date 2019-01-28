@@ -42,7 +42,8 @@ public class GameClient {
             public void run() {
                 super.run();
                 while(running) {
-                    MoveCommand command = logic.getNextMoveCommand(world);
+                    refreshMyPlayer();
+                    MoveCommand command = logic.getNextMoveCommand(world, myPlayer);
                     if (command != null) {
                         kryoClient.sendTCP(command);
                     }
@@ -79,6 +80,7 @@ public class GameClient {
                     gui.registerMyPlayer(myPlayer);
                 } else if (object instanceof World) {
                     world = (World) object;
+                    refreshMyPlayer();
                     updateGui();
                 }
             }
@@ -87,6 +89,17 @@ public class GameClient {
             kryoClient.connect( TIMEOUT, ADDRESS, PORT);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void refreshMyPlayer() {
+        if(world == null) {
+            return;
+        }
+        for(Player p : world.players) {
+            if(p.id == myPlayer.id) {
+                myPlayer = p;
+            }
         }
     }
 }

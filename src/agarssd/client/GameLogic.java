@@ -1,6 +1,7 @@
 package agarssd.client;
 
 import agarssd.model.MoveCommand;
+import agarssd.model.Player;
 import agarssd.model.World;
 
 import java.util.Random;
@@ -10,7 +11,7 @@ public class GameLogic {
     private Random random = new Random();
     private long lastCommand;
 
-    public MoveCommand getNextMoveCommand(World world) {
+    public MoveCommand getNextMoveCommand(World world, Player myPlayer) {
         if(world == null) {
             return null;
         }
