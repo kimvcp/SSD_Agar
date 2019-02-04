@@ -28,6 +28,24 @@ public class GameClient {
     private GameLogic logic;
     private boolean running;
 
+      /** singleton instance */
+      private static GameClient instance = null;
+    
+      private GameClient() {} 
+      
+      /**
+       * Get a singleton instance of this class.
+       * 
+       * @return the game client object.
+       */
+      public static GameClient getInstance() {
+          if (instance == null) {
+              instance = new GameClient();
+          }
+          return instance;
+      }
+      
+
     public void start() {
         initNetwork();
         initLogic();
