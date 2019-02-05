@@ -2,7 +2,7 @@ package agarssd.client;
 
 public class Main {
     public static void main(String[] args) {
-        GameClient gameClient = new GameClient();
+        GameClient gameClient = GameClient.getInstance();
         gameClient.start();
     }
 }

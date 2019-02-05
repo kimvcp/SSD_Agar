@@ -31,7 +31,7 @@ public class GameClient {
       /** singleton instance */
       private static GameClient instance = null;
     
-      GameClient() {} 
+      private GameClient() {} 
       
       /**
        * Get a singleton instance of this class.
