@@ -9,8 +9,19 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GameClient {
+public class GameClient implements Observable {
+	
+	//
+	private List<Observer> observers;
+	private boolean status;
+	private final Object MUTEX= new Object();
+	
+	
+
+	
 
     // public static final String ADDRESS = "127.0.0.1"; // For testing locally
     public static final String ADDRESS = "206.189.34.126"; // For testing on online server
@@ -32,7 +43,9 @@ public class GameClient {
       /** singleton instance */
       private static GameClient instance = null;
     
-      private GameClient() {} 
+      private GameClient() {
+    	  this.observers = new ArrayList<>();
+      } 
       
       /**
        * Get a singleton instance of this class.
@@ -48,6 +61,44 @@ public class GameClient {
           }
           return instance;
       }
+      
+      public void register(Observer obj) {
+  		if(obj == null) throw new NullPointerException("Null Observer");
+  		synchronized (MUTEX) {
+  		if(!observers.contains(obj)) observers.add(obj);
+  		}
+  	}
+      
+      public void unregister(Observer obj) {
+  		synchronized (MUTEX) {
+  		observers.remove(obj);
+  		}
+  	}
+      
+      public void notifyObservers() {
+  		List<Observer> observersLocal = null;
+  		synchronized (MUTEX) {
+  			if (!status)
+  				return;
+  			observersLocal = new ArrayList<>(this.observers);
+  			this.status=false;
+  		}
+  		for (Observer obj : observersLocal) {
+  			obj.updatePlayer( myPlayer);
+  		}
+
+  	}
+      
+      public Object getUpdate(Observer obj) {
+  		return this.world;
+  	}
+      
+      public void setStatus(Player myPlayer){
+  		
+  		this.myPlayer=myPlayer;
+  		this.status=true;
+  		notifyObservers();
+  	}
       
 
     public void start() {

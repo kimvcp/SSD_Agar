@@ -9,13 +9,16 @@ import java.awt.*;
 
 public class Gui extends JFrame {
 
+	//extends JFrame
+	/*1*/
+
     private World world;
     private Player myPlayer;
     private JPanel panel;
     private int size = 500;
     private boolean gameOver = false;
 
-    public Gui() {
+        public Gui() {
         panel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -35,15 +38,28 @@ public class Gui extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
-
+ 
+  
+    
     public void registerMyPlayer(Player myPlayer) {
         this.myPlayer = myPlayer;
+    }
+    // update player for observer
+    public void updatePlayer (Player myPlayer) {
+    	this.myPlayer = myPlayer;
+    	 if(world == null){
+  			return;
+  			}
+  	    checkMyPlayerAlive();
+        panel.repaint();
+        
     }
 
     public void update(World world) {
         this.world = world;
-        checkMyPlayerAlive();
+	    checkMyPlayerAlive();
         panel.repaint();
+     
     }
 
     private void checkMyPlayerAlive() {
