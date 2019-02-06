@@ -25,8 +25,9 @@ public class GameClient {
     private Gui gui = new Gui();
     private World world;
     private Player myPlayer;
-    private GameLogic logic;
     private boolean running;
+    
+    private static GameLogic strategy;
 
       /** singleton instance */
       private static GameClient instance = null;
@@ -39,6 +40,9 @@ public class GameClient {
        * @return the game client object.
        */
       public static GameClient getInstance() {
+    	  
+    	  /** set strategy */ 	  
+    	  strategy = new RandomMoveStrategy();
           if (instance == null) {
               instance = new GameClient();
           }
@@ -53,7 +57,6 @@ public class GameClient {
     }
 
     private void initLogic() {
-        logic = new GameLogic();
         running = true;
         Thread logicThread = new Thread() {
             @Override
@@ -61,7 +64,7 @@ public class GameClient {
                 super.run();
                 while(running) {
                     refreshMyPlayer();
-                    MoveCommand command = logic.getNextMoveCommand(world, myPlayer);
+                    MoveCommand command = strategy.getNextMoveCommand(world, myPlayer);
                     if (command != null) {
                         kryoClient.sendTCP(command);
                     }
@@ -119,5 +122,15 @@ public class GameClient {
                 myPlayer = p;
             }
         }
+    }
+    
+    /**
+     * Set the move strategy.
+     *  
+     * @param strategy
+     * 
+     */
+    public void setMoveStrategy(GameLogic strategy) {
+    	this.strategy = strategy;
     }
 }
