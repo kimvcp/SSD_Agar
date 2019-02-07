@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class Gui extends JFrame {
+public class Gui extends JFrame implements Observer {
 
 	// extends JFrame
 	/* 1 */
